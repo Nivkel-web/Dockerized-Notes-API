@@ -1,0 +1,6 @@
+{
+  "name": "Dockerized Notes API",
+  "description": "Lightweight Node.js Express REST microservice packaged in an Alpine Linux Docker container for rapid deployment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

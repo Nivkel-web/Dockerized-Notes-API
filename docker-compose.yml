@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  notes-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: dockerized-notes-api
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOST=0.0.0.0
+      - NOTES_STORAGE_PATH=/data/notes.json
+      - LOG_LEVEL=info
+      - CORS_ORIGIN=*
+    volumes:
+      # Persistent volume for notes storage on host
+      - notes_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 256M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  notes_data:
+    driver: local
